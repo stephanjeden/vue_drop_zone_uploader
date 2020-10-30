@@ -1,4 +1,4 @@
-# vue_todo
+# vue_drop_zone_uploader
 
 ## Project setup
 ```

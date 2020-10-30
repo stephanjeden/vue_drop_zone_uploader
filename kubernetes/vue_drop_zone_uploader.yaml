@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vue-drop-zone-uploader
+  name: vue-drop-zone-uploader
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vue-drop-zone-uploader
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: vue-drop-zone-uploader
+    spec:
+      containers:
+        - image: >-
+            gcr.io/lunar-alpha-232604/github.com/stephanjeden/vue_drop_zone_uploader
+          imagePullPolicy: IfNotPresent
+          name: vue-drop-zone-uploader-1
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: vue-drop-zone-uploader
+  name: vue-drop-zone-uploader-hpa-udaz
+  namespace: default
+spec:
+  maxReplicas: 5
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 80
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vue-drop-zone-uploader
+---
+apiVersion: v1
+kind: Service
+metadata:
+  finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+  labels:
+    app: vue-drop-zone-uploader
+  name: vue-drop-zone-uploader-service
+  namespace: default
+spec:
+  clusterIP: 10.4.5.84
+  externalTrafficPolicy: Cluster
+  ports:
+    - nodePort: 32460
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: vue-drop-zone-uploader
+  sessionAffinity: None
+  type: LoadBalancer

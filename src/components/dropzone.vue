@@ -1,5 +1,8 @@
 <template>
   <div id="file-drag-drop">
+
+    <h1 id="header">Vue Drag-and-Drop Uploading Widget</h1>
+
     <div id="blueBox" class="blueBoxNormalAppearance">
       
       <form id="dropFormID" ref="fileform">

@@ -219,7 +219,7 @@ export default {
 
 .blueBoxNormalAppearance {
   transition: all 0.3s ease-in;
-  background: #0483e5;
+  background: #e54f04;
   width: 50vw;
   margin: auto;
   margin-top: 30px;
